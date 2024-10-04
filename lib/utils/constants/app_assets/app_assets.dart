@@ -1,0 +1,43 @@
+class AppAssets{
+  AppAssets._();
+
+  static const String splashBgImage = "assets/images/Splash.png";
+  static const String splashWithShadeBgImage = "assets/images/SplashWithShade.png";
+  static const String ellipseBgImage = "assets/images/Ellipse.png";
+  static const String splashTextitImage = "assets/images/splashTextit.png";
+  static const String textitImg = "assets/images/TextitImg.png";
+  static const String icFb = "assets/icons/icFb.svg";
+  static const String icGoogle = "assets/icons/icGoogle.svg";
+  static const String icApple = "assets/icons/icApple.svg";
+  static const String icMessage = "assets/icons/icMessage.svg";
+  static const String icContacts = "assets/icons/icContacts.svg";
+  static const String icSettings = "assets/icons/icSettings.svg";
+  static const String icSettingsBlue = "assets/icons/icSettingsBlue.svg";
+  static const String icContactsBlue = "assets/icons/icContactsBlue.svg";
+  static const String icMessageBlue = "assets/icons/icMessageBlue.svg";
+  static const String icSearch = "assets/icons/icSearch.svg";
+  static const String dummyImage = "https://images.pexels.com/photos/774095/pexels-photo-774095.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
+  static const String icSheetBar = "assets/icons/icSheetBar.svg";
+  static const String icDelete = "assets/icons/icDelete.svg";
+  static const String icNotification = "assets/icons/icNotification.svg";
+  static const String icInfoLightBlue = "assets/icons/icInfoLightBlue.svg";
+  static const String icInfoBlue = "assets/icons/icInfoBlue.svg";
+  static const String icPhone = "assets/icons/icPhone.svg";
+  static const String icPhoneBlue = "assets/icons/icPhoneBlue.svg";
+  static const String icVideoCall = "assets/icons/icVideoCallWhite.svg";
+  static const String dummyUser1 = "https://images.pexels.com/photos/842811/pexels-photo-842811.jpeg";
+  static const String dummyUser2 = "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
+  static const String dummyUser3 = "https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
+  static const String icDocuments = "assets/icons/icDocuments.svg";
+  static const String icMic = "assets/icons/icMic.svg";
+  static const String icCamera = "assets/icons/icCamera.svg";
+  static const String icSend = "assets/icons/icSend.svg";
+  static const String icKey = "assets/icons/icKey.svg";
+  static const String icData = "assets/icons/icData.svg";
+  static const String icInviteFriends = "assets/icons/icInviteFriends.svg";
+  static const String icHelp = "assets/icons/icHelp.svg";
+  static const String icQrScan = "assets/icons/icQrScan.svg";
+  static const String icAddContact = "assets/icons/icAddContact.svg";
+  static const String icMore = "assets/icons/icMore.svg";
+  static const String icDob = "assets/icons/icDob.svg";
+}

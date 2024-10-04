@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "694338134436",
+    "project_id": "live2chat7app",
+    "storage_bucket": "live2chat7app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:694338134436:android:7ebf11bba351cee605e131",
+        "android_client_info": {
+          "package_name": "com.example.chateo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEiJsqo0y_HWagCg9pCMqs911a6MuWmTs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
