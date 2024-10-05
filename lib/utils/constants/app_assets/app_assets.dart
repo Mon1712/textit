@@ -40,4 +40,5 @@ class AppAssets{
   static const String icAddContact = "assets/icons/icAddContact.svg";
   static const String icMore = "assets/icons/icMore.svg";
   static const String icDob = "assets/icons/icDob.svg";
+  static const String lottieLoader = "assets/lottie/Animation - 1725724369051.json";
 }

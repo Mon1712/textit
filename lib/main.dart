@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import 'utils/network_manager/network_manager.dart';
 import 'utils/themes/app_theme.dart';
 
 Future<void> main() async{
@@ -17,7 +18,9 @@ Future<void> main() async{
   /// Initialize firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );
+  ).then((_){
+    Get.put(NetworkManager());
+  });
 
   runApp(const MyApp());
 }

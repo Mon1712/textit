@@ -2,10 +2,11 @@ import 'package:chateo/modules/widgets/custom_text_field/custom_text_field.dart'
 import 'package:chateo/utils/constants/app_colors/app_colors.dart';
 import 'package:chateo/utils/helper_functions/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TitleAndTextField extends StatelessWidget {
   const TitleAndTextField({
-    super.key, required this.title, this.suffixIcon, this.obscureText = false, this.controller, this.readOnly=false, this.onTap,
+    super.key, required this.title, this.suffixIcon, this.obscureText = false, this.controller, this.readOnly=false, this.onTap, this.autoValidateMode, this.validator, this.inputFormatters,
   });
 
   final String title;
@@ -14,6 +15,9 @@ class TitleAndTextField extends StatelessWidget {
   final TextEditingController? controller;
   final bool readOnly;
   final void Function()? onTap;
+  final AutovalidateMode? autoValidateMode;
+  final String? Function(String?)? validator;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +33,9 @@ class TitleAndTextField extends StatelessWidget {
           controller: controller,
           readOnly: readOnly,
           onTap: onTap,
+          autoValidateMode: autoValidateMode,
+          validator: validator,
+          inputFormatters: inputFormatters,
         ),
       ],
     );

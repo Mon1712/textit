@@ -1,8 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
-
 import 'utils/constants/app_colors/app_colors.dart';
 
 class TableBasicsExample extends StatefulWidget {

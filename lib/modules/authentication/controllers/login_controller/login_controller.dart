@@ -13,4 +13,11 @@ class LoginController extends GetxController{
  void toggleObscure(){
    obscureText.value = !obscureText.value;
  }
+
+  /// login to the app
+  Future<void> login() async{
+    if(!loginKey.currentState!.validate()){
+     return;
+    }
+  }
 }

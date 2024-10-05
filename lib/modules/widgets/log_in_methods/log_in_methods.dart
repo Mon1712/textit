@@ -32,6 +32,7 @@ class LogInMethods extends StatelessWidget {
   Widget signInMethods({void Function()? onTap,required String icon, Color? iconColor}){
     return  InkWell(
       onTap:onTap,
+      borderRadius: BorderRadius.circular(100),
       child: Container(
         height: ScreenPixels.fifty,
         width: ScreenPixels.fifty,
