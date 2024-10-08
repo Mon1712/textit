@@ -1,3 +1,4 @@
+import 'package:chateo/data/models/contact_model/contact_model.dart';
 import 'package:chateo/data/models/user_model/user_model.dart';
 import 'package:chateo/utils/exception_handling/firebase_auth_exception.dart';
 import 'package:chateo/utils/exception_handling/firebase_exception.dart';
@@ -20,6 +21,23 @@ class UserRepository {
 
   // Firebase Firestore instance
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  /// User getter method
+  FirebaseFirestore? get db => FirebaseFirestore.instance;
+
+/// snapshot of all Users
+Stream<QuerySnapshot<Map<String,dynamic>>> get getAllUser{
+    return _db.collection("User").snapshots();
+  }
+
+  // Stream to get users
+  Stream<List<ContactModel>> get contactsStream {
+    return _db.collection("User").snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return ContactModel.fromJson(doc.data());
+      }).toList();
+    });
+  }
 
   /// save user records
   Future<void> storeUserRecord({required UserModel userModel}) async{

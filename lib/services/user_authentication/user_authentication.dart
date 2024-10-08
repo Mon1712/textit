@@ -23,6 +23,7 @@ class UserAuthentication{
   /// User getter method
   User? get user => _auth.currentUser;
 
+
   ///[EmailAuthentication] Sign up by email and password
   Future<UserCredential> signUpByEmailPassword({
     required String email,
