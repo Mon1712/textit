@@ -67,10 +67,11 @@ class ContactsScreens extends StatelessWidget {
             child: CListViewBuilder(
               physics: const AlwaysScrollableScrollPhysics(),
                 itemCount: 10,
+                padding: EdgeInsets.zero,
                 itemBuilder: (_,index){
               return Container(
                 padding: EdgeInsets.symmetric(
-                    horizontal: ScreenHeight.fifteen,
+                    horizontal: ScreenHeight.ten,
                     vertical: ScreenHeight.ten),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,

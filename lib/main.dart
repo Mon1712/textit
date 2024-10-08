@@ -1,4 +1,3 @@
-import 'package:chateo/calander.dart';
 import 'package:chateo/firebase_options.dart';
 import 'package:chateo/routes/app_pages.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -42,7 +41,6 @@ class MyApp extends StatelessWidget {
           darkTheme: AppTheme.darkTheme,
           getPages: AppPages.routes,
           initialRoute: AppPages.initialPage,
-          // home:   TableBasicsExample(),
         );
       }
     );

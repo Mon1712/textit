@@ -9,7 +9,7 @@ import 'package:chateo/modules/authentication/screens/login_screen/login_screen.
 import 'package:chateo/modules/authentication/screens/sign_up_screen/sign_up_screen.dart';
 import 'package:chateo/modules/authentication/screens/splash_login_screen/splash_login_screen.dart';
 import 'package:chateo/modules/authentication/screens/splash_screen/splash_screen.dart';
-import 'package:chateo/modules/bottom_navigation/screen/bottom_navigation_screen.dart';
+import 'package:chateo/modules/features/bottom_navigation/screen/bottom_navigation_screen.dart';
 import 'package:chateo/modules/features/screens/single_chat_screen/single_chat_screen.dart';
 import 'package:chateo/modules/features/screens/user_info_screen/user_info_screen.dart';
 import 'package:chateo/utils/transitions/transitions.dart';
@@ -55,6 +55,7 @@ abstract class AppPages {
         page: const UserInfoScreen(),
         binding: UserInfoBindings(),
         transition: Transition.fade),
+
   ];
 }
 

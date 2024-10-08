@@ -9,6 +9,7 @@ abstract class Routes {
   static const bottomNav = _Paths.bottomNav;
   static const singleChat = _Paths.singleChat;
   static const userInfo = _Paths.userInfo;
+  static const requiredField = _Paths.requiredField;
 
 }
 
@@ -20,5 +21,6 @@ abstract class _Paths {
   static const bottomNav = '/bottomNav';
   static const singleChat = '/singleChat';
   static const userInfo = '/userInfo';
+  static const requiredField = '/requiredField';
 
 }

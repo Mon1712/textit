@@ -87,6 +87,8 @@ class Validator {
       return 'Username cannot be empty';
     } else if (!regex.hasMatch(value)) {
       return 'Username can only contain letters, numbers, periods, and underscores';
+    }else if(value.length>30){
+      return 'Username can only contain maximum 30 characters';
     }
     return null;
   }

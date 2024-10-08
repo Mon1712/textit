@@ -1,4 +1,6 @@
 import 'package:chateo/modules/authentication/controllers/sign_up_controller/sign_up_controller.dart';
+import 'package:chateo/modules/widgets/cached_image/custom_cached_image_stack/custom_cached_image_stack.dart';
+import 'package:chateo/modules/widgets/cached_image/file_image_container/file_image_container.dart';
 import 'package:chateo/modules/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:chateo/modules/widgets/gradient_button/gradient_button.dart';
 import 'package:chateo/modules/widgets/title_and_textfield/title_and_textfield.dart';
@@ -14,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -28,10 +31,10 @@ class SignUpScreen extends StatelessWidget {
       },
       child: SafeArea(
         child: Scaffold(
-        
+
           /// App Bar
           appBar: const CAppBar(),
-        
+
           /// body
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: ScreenHeight.ten),
@@ -50,11 +53,56 @@ class SignUpScreen extends StatelessWidget {
                       .of(context)
                       .textTheme
                       .titleMedium, textAlign: TextAlign.center,),
-        
-                  SizedBox(
-                    height: Get.height * 0.08,
+
+                 40.height,
+
+                  /// Profile picture
+                  Obx(
+                    ()=>
+                    FileImageContainer(
+                        image: controller.image.value,
+                      height: ScreenHeight.oneHundred,
+                      width: ScreenHeight.oneHundred,
+                      color: AppColors.blueA1B5D8.withOpacity(0.5),
+                      positionBottom: 0,
+                      positionRight: 0,
+                      borderColor: AppColors.blueA1B5D8,
+                      child:
+                      Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: dark ?[]:[
+                              BoxShadow(
+                                  spreadRadius: 1,
+                                  blurRadius: 5,
+                                  color: AppColors.grey797C7B.withOpacity(0.2),
+                                  offset: const Offset(1, 1)
+
+                              )
+                            ]
+                        ),
+                        child: Material(
+                          color: AppColors.transparent,
+                          child: InkWell(
+                            onTap: (){
+                              controller.pickImage(source: ImageSource.gallery);
+                            },
+                            borderRadius: BorderRadius.circular(100),
+                            child: Ink(
+                              padding: EdgeInsets.all(ScreenHeight.six),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: dark?AppColors.black151515:AppColors.white,
+                              ),
+                              child: SvgPicture.asset(AppAssets.icUpload,height: ScreenHeight.twenty,width:  ScreenHeight.twenty,colorFilter: ColorFilter.mode(dark?AppColors.white:AppColors.black151515, BlendMode.srcIn),),
+                            ),
+                          ),
+                        ),
+                      ),
                   ),
-        
+                  ),
+                  30.height,
+
                   /// Text Fields
                   Form(
                     key: controller.signUpKey,
@@ -71,28 +119,36 @@ class SignUpScreen extends StatelessWidget {
                                   r'\b\w+(\s{0,1})'))
                             ],
                           ),
-        
+
                           30.height,
-        
-                          // Date of birth
+
+                          // phone number
                           TitleAndTextField(
-                            title: "Your username",
-                            controller: controller.userNameController,
+                            title: "Your phone number",
+                            controller: controller.phoneNumberController,
                             validator: (value) =>
                                 Validator.validateUsername(value),
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp(
+                                  r'^\d+$')),
+                              LengthLimitingTextInputFormatter(10)
+                            ],
+                            hintText: "+91",
                           ),
-        
+
                           30.height,
-        
+
                           // email
                           TitleAndTextField(
                             title: "Your email",
                             controller: controller.emailController,
-                            validator: (value) => Validator.validateEmail(value),
+                            validator: (value) =>
+                                Validator.validateEmail(value),
                           ),
-        
+
                           30.height,
-        
+
                           // password
                           Obx(
                                 () =>
@@ -115,9 +171,9 @@ class SignUpScreen extends StatelessWidget {
                                   ),
                                 ),
                           ),
-        
+
                           30.height,
-        
+
                           // confirm Password
                           Obx(
                                 () =>
@@ -128,7 +184,8 @@ class SignUpScreen extends StatelessWidget {
                                   controller: controller.confirmPassController,
                                   validator: (value) =>
                                       Validator.validateConfirmPassword(
-                                          value, controller.passController.text),
+                                          value,
+                                          controller.passController.text),
                                   suffixIcon: InkWell(
                                     borderRadius: BorderRadius.circular(
                                         ScreenHeight.oneHundred),
@@ -144,40 +201,41 @@ class SignUpScreen extends StatelessWidget {
                                 ),
                           ),
                           30.height,
-        
+
                           // Date of birth
                           TitleAndTextField(
                             title: "Date of birth",
                             controller: controller.dateOfBirthController,
-                            validator: (value) => Validator.validateDob(value),
                             suffixIcon: SvgPicture.asset(
-                              AppAssets.icDob, colorFilter: ColorFilter.mode(dark
-                                ? AppColors.white
-                                : AppColors.black000E08, BlendMode.srcIn),),
+                              AppAssets.icDob,
+                              colorFilter: ColorFilter.mode(dark
+                                  ? AppColors.white
+                                  : AppColors.black000E08, BlendMode.srcIn),),
                             onTap: () async {
                               controller.selectDateOfBirth(context: context,
                                   dark: dark);
                             },
                             readOnly: true,
                           ),
-        
+
                           30.height,
-        
+
                           // Date of birth
                           TitleAndTextField(
                             title: "Status",
-                            controller: controller.statusController,
-                            validator: (value) => Validator.validateStatus(value),
+                            controller: controller.aboutController,
+                            validator: (value) =>
+                                Validator.validateStatus(value),
                           ),
                         ]
                     ),
                   ),
-        
-        
+
+
                   SizedBox(
                     height: Get.height * 0.15,
                   ),
-        
+
                   /// Button
                   CGradientButton(
                     btnName: "Create an account",
@@ -186,7 +244,7 @@ class SignUpScreen extends StatelessWidget {
                     },
                   ),
                   20.height,
-        
+
                 ],
               ),
             ),

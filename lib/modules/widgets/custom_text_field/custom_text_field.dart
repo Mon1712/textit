@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 
 class CTextField extends StatelessWidget {
   const CTextField({
-    super.key, this.controller, this.suffixIcon, this.obscureText = false, this.readOnly=false, this.onTap, this.autoValidateMode, this.validator, this.inputFormatters,
+    super.key, this.controller, this.suffixIcon, this.obscureText = false, this.readOnly=false, this.onTap, this.autoValidateMode, this.validator, this.inputFormatters, this.keyboardType, this.hintText,
   });
   final  TextEditingController? controller;
 final Widget? suffixIcon;
@@ -15,6 +15,9 @@ final void Function()? onTap;
 final AutovalidateMode? autoValidateMode;
 final String? Function(String?)? validator;
 final List<TextInputFormatter>? inputFormatters;
+final TextInputType? keyboardType;
+final String? hintText;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -25,7 +28,10 @@ final List<TextInputFormatter>? inputFormatters;
       autovalidateMode: autoValidateMode,
       validator: validator,
       inputFormatters: inputFormatters,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: TextStyle(fontSize: ScreenPixels.fourteen, color: AppColors.grey797C7B.withOpacity(0.8)),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         floatingLabelStyle: TextStyle(color: AppColors.blue3D4A7A,
             fontWeight: FontWeight.w500,

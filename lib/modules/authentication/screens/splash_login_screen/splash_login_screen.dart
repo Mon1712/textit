@@ -57,13 +57,6 @@ class SplashLoginScreen extends StatelessWidget {
                             style: TextStyle(
                               color: AppColors.white,
                               fontWeight: FontWeight.w700,
-                             shadows:  <Shadow>[
-                               Shadow(
-                                   color: Colors.black.withOpacity(0.5),
-                                   blurRadius: 5.0,
-                                 offset: const Offset(5, 10)
-                               )
-                             ],
                               fontSize: ScreenPixels.sixtyEight,
                             ),
                           ),
@@ -75,7 +68,7 @@ class SplashLoginScreen extends StatelessWidget {
                   Text(AppText.splashLoginDesc,
                     style: TextStyle(
                       color: AppColors.white.withOpacity(0.7),
-                      fontSize: 16,),),
+                      fontSize: ScreenPixels.sixteen,),),
                   40.height,
                   LogInMethods(
                     onTapApple: () {},

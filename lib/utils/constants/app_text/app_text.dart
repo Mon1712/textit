@@ -13,5 +13,9 @@ class AppText{
   static const String signUpTitle = "Sign up with Email";
   static const String signUpDesc = "Get chatting with friends and family \ntoday by signing up for our chat app!";
 
+/// required fields
+  static const String requiredFieldTitle = "Please Fill the required fields";
+  static const String requiredFieldDesc = "To begin with our app you have to fill both the fields";
+
   /// forgot password
 }

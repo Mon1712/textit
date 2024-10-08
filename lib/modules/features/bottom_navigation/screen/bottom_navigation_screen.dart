@@ -1,5 +1,5 @@
 
-import 'package:chateo/modules/bottom_navigation/controller/bottom_navigation_controller.dart';
+import 'package:chateo/modules/features/bottom_navigation/controller/bottom_navigation_controller.dart';
 import 'package:chateo/utils/constants/app_assets/app_assets.dart';
 import 'package:chateo/utils/constants/app_colors/app_colors.dart';
 import 'package:chateo/utils/constants/dimens/screen_height/screen_height.dart';

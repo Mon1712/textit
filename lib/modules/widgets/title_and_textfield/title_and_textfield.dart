@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 
 class TitleAndTextField extends StatelessWidget {
   const TitleAndTextField({
-    super.key, required this.title, this.suffixIcon, this.obscureText = false, this.controller, this.readOnly=false, this.onTap, this.autoValidateMode, this.validator, this.inputFormatters,
+    super.key, required this.title, this.suffixIcon, this.obscureText = false, this.controller, this.readOnly=false, this.onTap, this.autoValidateMode, this.validator, this.inputFormatters, this.keyboardType, this.hintText,
   });
 
   final String title;
@@ -18,6 +18,8 @@ class TitleAndTextField extends StatelessWidget {
   final AutovalidateMode? autoValidateMode;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
+  final TextInputType? keyboardType;
+  final String? hintText;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,8 @@ class TitleAndTextField extends StatelessWidget {
           autoValidateMode: autoValidateMode,
           validator: validator,
           inputFormatters: inputFormatters,
+          keyboardType: keyboardType,
+          hintText: hintText,
         ),
       ],
     );
