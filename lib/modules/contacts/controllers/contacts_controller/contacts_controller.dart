@@ -1,88 +1,114 @@
 import 'dart:developer';
 
+import 'package:chateo/data/models/contact_detail_model/contact_detail_model.dart';
 import 'package:chateo/data/models/contact_model/contact_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:permission_handler/permission_handler.dart';
 
-class ContactsController extends GetxController{
+class ContactsController extends GetxController {
+  /// Variables
+  List<Contact>? contacts;
+  List<String> inviteContacts = [];
+  List<ContactDetails> contactDetailsList = [];
+  @override
+  void onInit() {
+    super.onInit();
+    fetchContacts();
+  }
 
-
-  /// variables
- late List<Contact>? contacts;
-
- @override
- void onInit() {
-   super.onInit();
-   fetchContacts();
- }
-
-
+  /// Fetch contacts from device
   Future<void> fetchContacts() async {
-    var permissionStatus = await Permission.contacts.status;
-
-    // Request permission if not granted
-    if (permissionStatus.isDenied) {
-      permissionStatus = await Permission.contacts.request();
-    }
-    if (permissionStatus.isPermanentlyDenied) {
-      // Permission permanently denied, direct user to app settings
-      openAppSettings();
-    }
-
-    if (permissionStatus.isGranted) {
-      try {
-         contacts = await FlutterContacts.getContacts(
-          withThumbnail: true,
-          withPhoto: true,
-          withAccounts: true,
-          withGroups: true,
-          withProperties: true,
-        );
-      } catch (e) {
-        log("Error fetching contacts: $e");
-      }
-    } else {
-      log("Permission denied");
+    try {
+      contacts = await FlutterContacts.getContacts(
+        withThumbnail: true,
+        withPhoto: true,
+        withAccounts: true,
+        withGroups: true,
+        withProperties: true,
+      );
+    } catch (e) {
+      log("Error fetching contacts: $e");
     }
   }
 
-  /// get New ChatModel lists
-  List<ContactModel> filteredList(AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,List<Contact> contacts) {
-
-   // Initialize a list to store matching contacts
+  /// Get New ChatModel lists
+  List<ContactModel> filteredList(AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot, List<Contact> contacts) {
+    // Initialize a list to store matching contacts
     List<ContactModel> matchingContacts = [];
 
-    // firebase snapshot data
+    // Firebase snapshot data
     var snapShotData = snapshot.data!.docs.map((data) =>
         ContactModel.fromJson(data.data()));
 
     // Use a more efficient matching approach, e.g., using a set of phone numbers
-    Set<String> contactNumbers = contacts
-        .expand((contact) =>
-        contact.phones.map((phone) => phone.normalizedNumber ?? ""))
-        .toSet();
+    Set<String> contactNumbers = contacts.expand((contact) =>
+        contact.phones.map((phone) => phone.normalizedNumber)).toSet();
 
+    // Use a more efficient matching approach, e.g., using a set of phone numbers
+    var newCon = contacts
+        .where((contact) =>
+    contact.phones.isNotEmpty &&
+        contact.phones.first.normalizedNumber.isNotEmpty)
+        .map((contact) {
+      String normalizedNumber = contact.phones.first.normalizedNumber;
+      return ContactDetails(
+        phoneNumber: normalizedNumber,
+        name: contact.displayName,
+        profileImage: contact.photo, // Optional: Add photo if you need it
+      );
+    }).toList();
+
+    log("${newCon.length}");
+
+    // Loop through all Firestore contacts and compare
     for (var firestoreContact in snapShotData) {
       String firestorePhoneNumber = "+91${firestoreContact.phoneNumber
-          ?.trim()}" ?? "";
+          ?.trim()}";
 
+      // Check if Firestore contact matches any phone number in device contacts
       if (contactNumbers.contains(firestorePhoneNumber)) {
         log("$firestorePhoneNumber matches a contact");
-        matchingContacts.add(ContactModel(id: firestoreContact.id,
-            name: firestoreContact.name,
-            phoneNumber: firestoreContact.phoneNumber,
-            profileImage: firestoreContact.profileImage));
+        matchingContacts.add(ContactModel(
+          id: firestoreContact.id,
+          name: firestoreContact.name,
+          phoneNumber: firestoreContact.phoneNumber,
+          profileImage: firestoreContact.profileImage,
+        ));
       } else {
         log("$firestorePhoneNumber does not match");
       }
     }
-    log("$matchingContacts");
+
+    // Loop through device contacts and add non-matching contacts to invite list
+    // for (var contactNumber in contactNumbers) {
+    //   String firestorePhoneNumber = "+91${snapShotData.first.phoneNumber
+    //       ?.trim()}";
+    //
+    //   // Add contact numbers to inviteContacts if not already present in Firestore
+    //   if (contactNumber != firestorePhoneNumber &&
+    //       !inviteContacts.contains(contactNumber)) {
+    //     inviteContacts.add(contactNumber);
+    //   }
+    // }
+    // log("Number of unmatched contacts (invite): ${inviteContacts.length}");
+
+    for (var contactDetails in newCon) {
+      String firestorePhoneNumber = "+91${snapShotData.first.phoneNumber
+          ?.trim()}";
+
+      // Check if the phone number is different and not already in the list
+      bool alreadyInList = contactDetailsList
+          .any((detail) => detail.phoneNumber == contactDetails.phoneNumber);
+
+      // Add contact numbers to inviteContacts if not already present in Firestore
+      if (contactDetails.phoneNumber != firestorePhoneNumber && !alreadyInList) {
+        contactDetailsList.add(contactDetails);
+      }
+    }
+    log("New Con unmatched contacts (invite): ${contactDetailsList.length}");
+    update(); // Update the UI
     return matchingContacts;
   }
-
-  }
-
-
+}

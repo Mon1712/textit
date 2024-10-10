@@ -1,5 +1,4 @@
 import 'package:chateo/modules/authentication/controllers/sign_up_controller/sign_up_controller.dart';
-import 'package:chateo/modules/widgets/cached_image/custom_cached_image_stack/custom_cached_image_stack.dart';
 import 'package:chateo/modules/widgets/cached_image/file_image_container/file_image_container.dart';
 import 'package:chateo/modules/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:chateo/modules/widgets/gradient_button/gradient_button.dart';

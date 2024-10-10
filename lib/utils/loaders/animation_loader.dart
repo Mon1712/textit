@@ -1,5 +1,4 @@
 
-import 'package:chateo/modules/authentication/screens/login_screen/login_screen.dart';
 import 'package:chateo/utils/constants/app_colors/app_colors.dart';
 import 'package:chateo/utils/extension/sized_box_extensions/sized_box_extensions.dart';
 import 'package:chateo/utils/helper_functions/helper_functions.dart';
