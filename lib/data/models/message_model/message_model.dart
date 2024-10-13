@@ -5,6 +5,7 @@ enum Type{text,image,video,audio}
 
 class MessageModel {
    String? fromId;
+   String? dateAndTime;
    String? toId;
    String? read;
    String? sent;
@@ -13,6 +14,7 @@ class MessageModel {
 
   MessageModel({
      this.fromId,
+    this.dateAndTime,
      this.toId,
      this.read,
      this.sent,
@@ -26,6 +28,7 @@ class MessageModel {
       'fromId': fromId,
       'toId': toId,
       'read': read,
+      'dateAndTime':dateAndTime,
       'sent': sent,
       'msg': msg,
       'type': type?.toString().split('.').last,
@@ -40,6 +43,7 @@ class MessageModel {
       read: map['read'] ?? false,
       sent: map['sent'],
       msg: map['msg'],
+      dateAndTime: map['dateAndTime'],
       type: Type.values.firstWhere(
             (e) => e.toString() == 'Type.${map['type']}',
         orElse: () => Type.text, // Default to 'text' if type is not found

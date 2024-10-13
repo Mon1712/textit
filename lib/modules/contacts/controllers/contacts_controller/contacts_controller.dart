@@ -14,7 +14,6 @@ class ContactsController extends GetxController {
   List<Contact> contacts = []; // Contains contacts fetch from device contacts
   List<ContactDetails> contactDetailsList = []; // Contains contacts which doesn't exists in firestore db
 
-
   /// move to single chat screen
   void moveToSingleChatScreen(ContactModel contactModel){
 

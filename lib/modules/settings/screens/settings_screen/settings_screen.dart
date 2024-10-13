@@ -166,7 +166,7 @@ class SettingsScreen extends StatelessWidget {
               svgIcon: icon,
               containerColor: AppColors.blueDEEBFF,
               paddingAll: ScreenHeight.ten,
-              colorFilter: ColorFilter.mode(AppColors.grey797C7B, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(AppColors.grey797C7B, BlendMode.srcIn),
             ),
             10.width,
             Column(

@@ -92,35 +92,94 @@ class SingleChatScreen extends StatelessWidget {
                       stream: UserRepository.instance.getAllChats(
                           receiverId: controller.contactModelArg.id),
                       builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return Center(child: Text(
-                              "Error: ${snapshot.error}"));
-                        }
-
-                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                          return const Center(child: Text("No messages found"));
-                        }
-
-                        // Retrieving the messages from the snapshot
-                        var messages = snapshot.data!.docs.map((map)=>MessageModel.fromMap(map));
-                        print(messages);
-                        return CListViewBuilder(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          padding: EdgeInsets.symmetric(horizontal: ScreenHeight
-                              .ten,
-                              vertical: ScreenHeight.ten),
-                          itemCount: messages.length,
-                          itemBuilder: (_, index) {
-                            var messageData = messages.first;
-                            return MessageChatBubble(
-                              msg:messageData.msg??"",
-                              fromUserId: UserAuthentication.instance.user!.uid,
-                              time: messageData.sent??"",
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                          // No connection has been established yet.
+                            return const Center(
+                              child: Text('No connection to the stream'),
                             );
-                          },
-                          separatorBuilder: (_, index) {
-                            return 20.height;
-                          },);
+
+                          case ConnectionState.waiting:
+                          // The stream is waiting for data (typically a loading state).
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+
+                          case ConnectionState.active:
+                          // The stream is actively providing data.
+                            if (snapshot.hasData) {
+                              // Retrieving the messages from the snapshot
+                              var messages = snapshot.data!.docs.map((map) =>
+                                  MessageModel.fromMap(map)).toList();
+                              return
+                                messages.isEmpty? Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: Get.width*0.4,
+                                      child: TextButton(
+                                        onPressed: (){
+                                          controller.chatFieldController.text ="Hii! 👋";
+                                        },
+                                        child: Center(child: Text("Say Hii! 👋",style: TextStyle(
+                                          fontSize: ScreenPixels.eighteen
+                                        ),)),
+                                      ),
+                                    ),
+                                  ],
+                                ):
+
+                                CListViewBuilder(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: ScreenHeight
+                                        .twenty,
+                                    vertical: ScreenHeight.ten),
+                                itemCount: messages.length,
+                                itemBuilder: (_, index) {
+                                  var messageData = messages[index];
+                                  final messageTime = DateTime.parse(messageData.dateAndTime??""); // Assuming `sent` is a string
+
+                                  // Check if we need to show a date separator
+                                  bool showDateSeparator = true;
+                                  if (index > 0) {
+                                    final previousMessageDate = DateTime.parse(messages[index - 1].dateAndTime??"");
+                                    // Only show separator if the current message's date is different from the previous one
+                                    showDateSeparator = messageTime.day != previousMessageDate.day ||
+                                        messageTime.month != previousMessageDate.month ||
+                                        messageTime.year != previousMessageDate.year;
+                                  }
+                                  return MessageChatBubble(
+                                    msg: messageData.msg ?? "",
+                                    fromUserId: messageData.fromId??"",
+                                    time: messageData.sent ?? "",
+                                    messageDate: messageTime,
+                                      showDateSeparator: showDateSeparator
+                                  );
+                                },
+                                separatorBuilder: (_, index) {
+                                  return 20.height;
+                                },);
+                            } else {
+                              // Stream is active but no data has been received yet.
+                              return const Center(
+                                child: Text('No data available'),
+                              );
+                            }
+
+                          case ConnectionState.done:
+                          // The stream has finished sending data and is closed.
+                            return const Center(
+                              child: Text('Stream has completed'),
+                            );
+
+                          default:
+                          // If none of the above cases match, handle an unexpected state.
+                            return const Center(
+                              child: Text('Something went wrong'),
+                            );
+                        }
                       }
                   ),
                 ),
@@ -140,7 +199,8 @@ class SingleChatScreen extends StatelessWidget {
                         sent: DateFormat('hh:mm a')
                             .format(DateTime.now())
                             .toString(),
-                        type: Type.text
+                        type: Type.text,
+                      dateAndTime: DateTime.now().toString()
                     ));
                   },
                   controller: controller.chatFieldController,
@@ -152,6 +212,8 @@ class SingleChatScreen extends StatelessWidget {
       ),
     );
   }
+
+
 }
 
 

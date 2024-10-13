@@ -81,21 +81,18 @@ class ContactsScreens extends StatelessWidget {
             stream: UserRepository.instance.getAllUser,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return Center(
-                    child: Text('Something went wrong: ${snapshot.error}'));
+                return Center(child: Text('Something went wrong: ${snapshot.error}'));
               }
-              if (!snapshot.hasData || controller.contacts.isEmpty) {
+              if (!snapshot.hasData  || controller.contacts.isEmpty) {
                 return const Center(child: Text('No contacts found'));
               }
 
-              var contacts = controller.filteredList(
-                  snapshot, controller.contacts);
+              var contacts = controller.filteredList(snapshot, controller.contacts);
               return Flexible(
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
                       /// Firebase contact lists
                       CListViewBuilder(
                         physics: const NeverScrollableScrollPhysics(),
@@ -104,60 +101,53 @@ class ContactsScreens extends StatelessWidget {
                         itemBuilder: (_, index) {
                           var contactData = contacts[index];
                           return
-                            contactData.id ==
-                                UserAuthentication.instance.user!.uid
-                                ? const SizedBox.shrink()
-                                :
+                            contactData.id == UserAuthentication.instance.user!.uid? const SizedBox.shrink() :
                             InkWell(
-                              onTap: () {
-                                controller.moveToSingleChatScreen(contactData);
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: ScreenHeight.ten,
-                                  vertical: ScreenHeight.ten,
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    CustomCacheImage(
-                                      color: AppColors.blueA1B5D8.withOpacity(
-                                          0.5),
-                                      height: ScreenHeight.sixty,
-                                      width: ScreenHeight.sixty,
-                                      image: contactData.profileImage ?? "",
-                                      imageRadius: ScreenHeight.fifty,
-                                      onTap: () {},
-                                    ),
-                                    10.width,
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
-                                      children: [
-                                        Text(
-                                          contactData.name ?? "",
-                                          style: TextStyle(
-                                            fontSize: ScreenPixels.twenty,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          HelperFunctions.formatPhoneNumber(
-                                              contactData.phoneNumber ?? ""),
-                                          style: TextStyle(
-                                            fontSize: ScreenPixels.twelve,
-                                            color: dark
-                                                ? AppColors.grey797C7B
-                                                : AppColors.grey797C7B
-                                                .withOpacity(0.5),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                            onTap: () {
+                              controller.moveToSingleChatScreen(contactData);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: ScreenHeight.ten,
+                                vertical: ScreenHeight.ten,
                               ),
-                            );
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  CustomCacheImage(
+                                    color: AppColors.blueA1B5D8.withOpacity(0.5),
+                                    height: ScreenHeight.sixty,
+                                    width: ScreenHeight.sixty,
+                                    image: contactData.profileImage ?? "",
+                                    imageRadius: ScreenHeight.fifty,
+                                    onTap: () {},
+                                  ),
+                                  10.width,
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        contactData.name ?? "",
+                                        style: TextStyle(
+                                          fontSize: ScreenPixels.twenty,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Text(
+                                        HelperFunctions.formatPhoneNumber(contactData.phoneNumber ?? ""),
+                                        style: TextStyle(
+                                          fontSize: ScreenPixels.twelve,
+                                          color: dark
+                                              ? AppColors.grey797C7B
+                                              : AppColors.grey797C7B.withOpacity(0.5),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
                         },
                         separatorBuilder: (_, index) => 10.height,
                       ),
@@ -171,8 +161,7 @@ class ContactsScreens extends StatelessWidget {
                           "Invite people on Textit",
                           style: TextStyle(
                             fontSize: ScreenPixels.sixteen,
-                            color: dark ? AppColors.grey797C7B : AppColors
-                                .grey797C7B.withOpacity(0.8),
+                            color: dark ? AppColors.grey797C7B : AppColors.grey797C7B.withOpacity(0.8),
                           ),
                         ),
                       ),
@@ -184,8 +173,7 @@ class ContactsScreens extends StatelessWidget {
                         itemCount: controller.contactDetailsList.length,
                         padding: EdgeInsets.zero,
                         itemBuilder: (_, index) {
-                          var contactData = controller
-                              .contactDetailsList[index];
+                          var contactData = controller.contactDetailsList[index];
                           return InkWell(
                             onTap: () {},
                             child: Container(
@@ -202,16 +190,13 @@ class ContactsScreens extends StatelessWidget {
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: AppColors.blueA1B5D8.withOpacity(
-                                          0.5),
+                                      color: AppColors.blueA1B5D8.withOpacity(0.5),
                                     ),
-                                    child: Text(
-                                        contactData.name.substring(0, 1)),
+                                    child: Text(contactData.name.substring(0, 1)),
                                   ),
                                   10.width,
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(
                                         width: Get.width * 0.7,
@@ -231,8 +216,7 @@ class ContactsScreens extends StatelessWidget {
                                           fontSize: ScreenPixels.twelve,
                                           color: dark
                                               ? AppColors.grey797C7B
-                                              : AppColors.grey797C7B
-                                              .withOpacity(0.5),
+                                              : AppColors.grey797C7B.withOpacity(0.5),
                                         ),
                                       ),
                                     ],

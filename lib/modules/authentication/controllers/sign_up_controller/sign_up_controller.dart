@@ -42,7 +42,6 @@ class SignUpController extends GetxController {
   @override
   void onInit() async {
     aboutController.text = "Hey their I am using Textit";
-    print(DateFormat('dd MMM yyyy, hh:mm a').format(DateTime.now()));
     super.onInit();
   }
 

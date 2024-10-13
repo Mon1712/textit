@@ -27,7 +27,9 @@ class SingleChatController extends GetxController{
 
 /// send message
 Future<void> sendMessage(String receiverId, MessageModel messageModel ) async{
-   await UserRepository.instance.saveChatRecords(receiverId: receiverId, messageModel: messageModel);
+   await UserRepository.instance.saveChatRecords(receiverId: receiverId, messageModel: messageModel).then((_){
+     chatFieldController.clear();
+   });
 }
 
 }

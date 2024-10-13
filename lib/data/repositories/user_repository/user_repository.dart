@@ -40,7 +40,7 @@ Stream<QuerySnapshot<Map<String,dynamic>>> get getAllUser{
   Stream<QuerySnapshot<Map<String,dynamic>>> getAllChats({required String receiverId,}){
     return _db.collection("Chat")
         .doc(generateChatRoom(receiverId: receiverId))
-        .collection("messages")
+        .collection("messages").orderBy("dateAndTime", descending: false)
         .snapshots();  // This listens to changes in the 'messages' collection
   }
 
