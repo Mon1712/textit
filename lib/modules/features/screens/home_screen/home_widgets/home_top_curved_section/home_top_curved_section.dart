@@ -17,7 +17,7 @@ class HomeTopCurvedSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<HomeController>();
+    Get.find<HomeController>();
     return Stack(
       children: [
         Positioned(

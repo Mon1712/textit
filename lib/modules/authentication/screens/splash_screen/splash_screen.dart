@@ -8,21 +8,24 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final controller = Get.find<SplashController>();
-    return  Scaffold(
-      body: AppBackground(
-        child: Center(
-          child: Stack(
-            children: [
-              Positioned(
-                  top: Get.height*0.11,
-                  left: Get.width*0.225,
-                  child: const Image(image: AssetImage(AppAssets.textitImg))),
-            const Image(image: AssetImage(AppAssets.splashTextitImage))
+    return  GetBuilder(
+      builder: (SplashController controller) {
+        return Scaffold(
+          body: AppBackground(
+            child: Center(
+              child: Stack(
+                children: [
+                  Positioned(
+                      top: Get.height*0.11,
+                      left: Get.width*0.225,
+                      child: const Image(image: AssetImage(AppAssets.textitImg))),
+                const Image(image: AssetImage(AppAssets.splashTextitImage))
 
-          ],),
-        ),
-      ),
+              ],),
+            ),
+          ),
+        );
+      }
     );
   }
 }

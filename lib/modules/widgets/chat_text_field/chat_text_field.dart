@@ -1,4 +1,3 @@
-import 'package:chateo/modules/authentication/screens/login_screen/login_screen.dart';
 import 'package:chateo/modules/widgets/circular_icon/circular_icon.dart';
 import 'package:chateo/utils/constants/app_assets/app_assets.dart';
 import 'package:chateo/utils/constants/app_colors/app_colors.dart';

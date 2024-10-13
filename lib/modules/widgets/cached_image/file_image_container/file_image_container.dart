@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:chateo/utils/constants/app_assets/app_assets.dart';
-import 'package:chateo/utils/constants/app_colors/app_colors.dart';
 import 'package:chateo/utils/constants/dimens/screen_height/screen_height.dart';
 import 'package:flutter/material.dart';
 

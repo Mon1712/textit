@@ -2,16 +2,25 @@ import 'dart:developer';
 
 import 'package:chateo/data/models/contact_detail_model/contact_detail_model.dart';
 import 'package:chateo/data/models/contact_model/contact_model.dart';
+import 'package:chateo/routes/app_pages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
 class ContactsController extends GetxController {
+
   /// Variables
-  List<Contact>? contacts;
-  List<String> inviteContacts = [];
-  List<ContactDetails> contactDetailsList = [];
+  List<Contact> contacts = []; // Contains contacts fetch from device contacts
+  List<ContactDetails> contactDetailsList = []; // Contains contacts which doesn't exists in firestore db
+
+
+  /// move to single chat screen
+  void moveToSingleChatScreen(ContactModel contactModel){
+
+    Get.toNamed(Routes.singleChat, arguments: contactModel);
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -60,8 +69,6 @@ class ContactsController extends GetxController {
       );
     }).toList();
 
-    log("${newCon.length}");
-
     // Loop through all Firestore contacts and compare
     for (var firestoreContact in snapShotData) {
       String firestorePhoneNumber = "+91${firestoreContact.phoneNumber
@@ -69,31 +76,16 @@ class ContactsController extends GetxController {
 
       // Check if Firestore contact matches any phone number in device contacts
       if (contactNumbers.contains(firestorePhoneNumber)) {
-        log("$firestorePhoneNumber matches a contact");
         matchingContacts.add(ContactModel(
           id: firestoreContact.id,
           name: firestoreContact.name,
           phoneNumber: firestoreContact.phoneNumber,
           profileImage: firestoreContact.profileImage,
         ));
-      } else {
-        log("$firestorePhoneNumber does not match");
       }
     }
 
-    // Loop through device contacts and add non-matching contacts to invite list
-    // for (var contactNumber in contactNumbers) {
-    //   String firestorePhoneNumber = "+91${snapShotData.first.phoneNumber
-    //       ?.trim()}";
-    //
-    //   // Add contact numbers to inviteContacts if not already present in Firestore
-    //   if (contactNumber != firestorePhoneNumber &&
-    //       !inviteContacts.contains(contactNumber)) {
-    //     inviteContacts.add(contactNumber);
-    //   }
-    // }
-    // log("Number of unmatched contacts (invite): ${inviteContacts.length}");
-
+    // create a new list that does not contains phone number
     for (var contactDetails in newCon) {
       String firestorePhoneNumber = "+91${snapShotData.first.phoneNumber
           ?.trim()}";
@@ -103,12 +95,27 @@ class ContactsController extends GetxController {
           .any((detail) => detail.phoneNumber == contactDetails.phoneNumber);
 
       // Add contact numbers to inviteContacts if not already present in Firestore
-      if (contactDetails.phoneNumber != firestorePhoneNumber && !alreadyInList) {
+      if (contactDetails.phoneNumber != firestorePhoneNumber &&
+          !alreadyInList) {
         contactDetailsList.add(contactDetails);
       }
     }
-    log("New Con unmatched contacts (invite): ${contactDetailsList.length}");
     update(); // Update the UI
     return matchingContacts;
   }
 }
+
+
+
+// Loop through device contacts and add non-matching contacts to invite list
+// for (var contactNumber in contactNumbers) {
+//   String firestorePhoneNumber = "+91${snapShotData.first.phoneNumber
+//       ?.trim()}";
+//
+//   // Add contact numbers to inviteContacts if not already present in Firestore
+//   if (contactNumber != firestorePhoneNumber &&
+//       !inviteContacts.contains(contactNumber)) {
+//     inviteContacts.add(contactNumber);
+//   }
+// }
+// log("Number of unmatched contacts (invite): ${inviteContacts.length}");
