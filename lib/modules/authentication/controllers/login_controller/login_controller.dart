@@ -22,7 +22,7 @@ class LoginController extends GetxController{
 
   /// move to bottom Nav
   void moveToBottomNav(){
-    Get.toNamed(Routes.bottomNav);
+    Get.offAllNamed(Routes.bottomNav);
   }
 
 

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:chateo/data/repositories/user_assets/user_assets.dart';
-import 'package:intl/intl.dart';
 import 'package:chateo/data/models/user_model/user_model.dart';
 import 'package:chateo/data/repositories/local_storage/local_storage.dart';
 import 'package:chateo/data/repositories/user_repository/user_repository.dart';
@@ -61,7 +60,7 @@ class SignUpController extends GetxController {
 
   /// move to bottom Nav
   void moveToBottomNav() {
-    Get.toNamed(Routes.bottomNav);
+    Get.offAllNamed(Routes.bottomNav);
   }
 
   /// image picker

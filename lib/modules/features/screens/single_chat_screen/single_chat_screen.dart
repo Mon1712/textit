@@ -111,56 +111,71 @@ class SingleChatScreen extends StatelessWidget {
                               // Retrieving the messages from the snapshot
                               var messages = snapshot.data!.docs.map((map) =>
                                   MessageModel.fromMap(map)).toList();
+                              var docId = snapshot.data!.docs.map((map) =>
+                                 map.id).toList();
                               return
-                                messages.isEmpty? Column(
+                                messages.isEmpty ? Column(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     SizedBox(
-                                      width: Get.width*0.4,
+                                      width: Get.width * 0.4,
                                       child: TextButton(
-                                        onPressed: (){
-                                          controller.chatFieldController.text ="Hii! 👋";
+                                        onPressed: () {
+                                          controller.chatFieldController.text =
+                                          "Hii! 👋";
                                         },
-                                        child: Center(child: Text("Say Hii! 👋",style: TextStyle(
-                                          fontSize: ScreenPixels.eighteen
+                                        child: Center(child: Text(
+                                          "Say Hii! 👋", style: TextStyle(
+                                            fontSize: ScreenPixels.eighteen
                                         ),)),
                                       ),
                                     ),
                                   ],
-                                ):
+                                ) :
 
                                 CListViewBuilder(
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: ScreenHeight
-                                        .twenty,
-                                    vertical: ScreenHeight.ten),
-                                itemCount: messages.length,
-                                itemBuilder: (_, index) {
-                                  var messageData = messages[index];
-                                  final messageTime = DateTime.parse(messageData.dateAndTime??""); // Assuming `sent` is a string
+                                  physics: const AlwaysScrollableScrollPhysics(),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: ScreenHeight
+                                          .twenty,
+                                      vertical: ScreenHeight.ten),
+                                  itemCount: messages.length,
+                                  itemBuilder: (_, index) {
+                                    var messageData = messages[index];
+                                    final messageTime = DateTime.parse(
+                                        messageData.dateAndTime ??
+                                            ""); // Assuming `sent` is a string
 
-                                  // Check if we need to show a date separator
-                                  bool showDateSeparator = true;
-                                  if (index > 0) {
-                                    final previousMessageDate = DateTime.parse(messages[index - 1].dateAndTime??"");
-                                    // Only show separator if the current message's date is different from the previous one
-                                    showDateSeparator = messageTime.day != previousMessageDate.day ||
-                                        messageTime.month != previousMessageDate.month ||
-                                        messageTime.year != previousMessageDate.year;
-                                  }
-                                  return MessageChatBubble(
-                                    msg: messageData.msg ?? "",
-                                    fromUserId: messageData.fromId??"",
-                                    time: messageData.sent ?? "",
-                                    messageDate: messageTime,
-                                      showDateSeparator: showDateSeparator
-                                  );
-                                },
-                                separatorBuilder: (_, index) {
-                                  return 20.height;
-                                },);
+                                    // Check if we need to show a date separator
+                                    bool showDateSeparator = true;
+                                    if (index > 0) {
+                                      final previousMessageDate = DateTime
+                                          .parse(
+                                          messages[index - 1].dateAndTime ??
+                                              "");
+                                      // Only show separator if the current message's date is different from the previous one
+                                      showDateSeparator = messageTime.day !=
+                                          previousMessageDate.day ||
+                                          messageTime.month !=
+                                              previousMessageDate.month ||
+                                          messageTime.year !=
+                                              previousMessageDate.year;
+                                    }
+                                    return MessageChatBubble(
+                                        msg: messageData.msg ?? "",
+                                        fromUserId: messageData.fromId ?? "",
+                                        time: messageData.sent ?? "",
+                                        messageDate: messageTime,
+                                        read: messageData.read??false,
+                                        showDateSeparator: showDateSeparator,
+                                      receiverId: controller.contactModelArg.id,
+                                      docId: messageData.id??"",
+                                    );
+                                  },
+                                  separatorBuilder: (_, index) {
+                                    return 20.height;
+                                  },);
                             } else {
                               // Stream is active but no data has been received yet.
                               return const Center(
@@ -190,18 +205,20 @@ class SingleChatScreen extends StatelessWidget {
                   onTapDocuments: () {},
                   onTapMic: () {},
                   onTapSend: () {
-                    controller.sendMessage(
-                        controller.contactModelArg.id, MessageModel(
-                        fromId: UserAuthentication.instance.user!.uid,
-                        toId: controller.contactModelArg.id,
-                        read: "de",
-                        msg: controller.chatFieldController.text,
-                        sent: DateFormat('hh:mm a')
-                            .format(DateTime.now())
-                            .toString(),
-                        type: Type.text,
-                      dateAndTime: DateTime.now().toString()
-                    ));
+                    if(controller.chatFieldController.text.isNotEmpty){
+                      controller.sendMessage(
+                          controller.contactModelArg.id,
+                          MessageModel(
+                              fromId: UserAuthentication.instance.user!.uid,
+                              toId: controller.contactModelArg.id,
+                              read: false,
+                              msg: controller.chatFieldController.text,
+                              sent: DateFormat('hh:mm a')
+                                  .format(DateTime.now())
+                                  .toString(),
+                              type: Type.text,
+                              dateAndTime: DateTime.now().toString()));
+                    }
                   },
                   controller: controller.chatFieldController,
                 ),
@@ -212,8 +229,6 @@ class SingleChatScreen extends StatelessWidget {
       ),
     );
   }
-
-
 }
 
 

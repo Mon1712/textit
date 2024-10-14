@@ -1,3 +1,4 @@
+import 'package:chateo/data/repositories/user_repository/user_repository.dart';
 import 'package:chateo/modules/widgets/custom_paint/chat_bubble_end_point/chat_bubble_end_point.dart';
 import 'package:chateo/services/user_authentication/user_authentication.dart';
 import 'package:chateo/utils/constants/app_colors/app_colors.dart';
@@ -5,6 +6,7 @@ import 'package:chateo/utils/constants/dimens/screen_height/screen_height.dart';
 import 'package:chateo/utils/constants/dimens/screen_pixels/screen_pixels.dart';
 import 'package:chateo/utils/extension/sized_box_extensions/sized_box_extensions.dart';
 import 'package:chateo/utils/helper_functions/helper_functions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -16,25 +18,32 @@ class MessageChatBubble extends StatelessWidget {
     required this.fromUserId,
     required this.time,
     required this.showDateSeparator,
-    required this.messageDate,
+    required this.messageDate, required this.read, this.receiverId, required this.docId,
   });
 
   final String msg;
+  final String docId;
   final String fromUserId;
   final String time;
   final bool showDateSeparator;
+  final bool read;
   final DateTime messageDate;
-
+  final String ? receiverId;
   @override
   Widget build(BuildContext context) {
     var dark = HelperFunctions.isDarkerMode(context);
     bool isUser = UserAuthentication.instance.user!.uid == fromUserId;
-
+    if(!read) {
+      print(read);
+      if(!isUser){
+        UserRepository.instance.updateSingleField(receiverId: receiverId??"",docId:docId);
+      }
+    }
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
-        if (showDateSeparator) buildDateSeparator(messageDate),
+        if (showDateSeparator) buildDateSeparator(messageDate,dark),
         10.height,
         Row(
           mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -42,16 +51,16 @@ class MessageChatBubble extends StatelessWidget {
             CustomPaint(
               painter: ChatBubbleEndPoint(
                 isUser
-                    ? (dark ? Colors.blue[800]! : Colors.blue[700]!)
-                    : (dark ? Colors.grey[600]! : Colors.grey[300]!),
+                    ? (dark ? AppColors.senderDark : AppColors.senderLight)
+                    : (dark ? AppColors.receiverDark : AppColors.receiverLight),
                 isUser,
               ),
               child: Container(
                 padding: EdgeInsets.all(ScreenHeight.ten),
                 decoration: BoxDecoration(
                   color: isUser
-                      ? (dark ? Colors.blue[800] : Colors.blue[700])
-                      : (dark ? Colors.grey[600] : Colors.grey[300]),
+                      ? (dark ? AppColors.senderDark : AppColors.senderLight)
+                      : (dark ? AppColors.receiverDark : AppColors.receiverLight),
                   borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(ScreenHeight.eighteen),
                     bottomLeft: Radius.circular(ScreenHeight.eighteen),
@@ -66,7 +75,7 @@ class MessageChatBubble extends StatelessWidget {
                   style: TextStyle(
                     fontSize: ScreenPixels.fourteen,
                     fontWeight: FontWeight.w500,
-                    color: isUser ? AppColors.white : AppColors.black000E08,
+                    color: isUser ? AppColors.white : AppColors.black151515,
                   ),
                 ),
               ),
@@ -74,22 +83,32 @@ class MessageChatBubble extends StatelessWidget {
           ],
         ),
         5.height,
-        Align(
-          alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-          child: Text(
-            time,
-            style: TextStyle(
-              fontSize: ScreenPixels.ten,
-              color: AppColors.grey797C7B.withOpacity(0.8),
-              fontWeight: FontWeight.w700,
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Align(
+              alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+              child: Text(
+                time,
+                style: TextStyle(
+                  fontSize: ScreenPixels.ten,
+                  color: AppColors.grey797C7B.withOpacity(0.8),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
-          ),
+          5.width,
+          Visibility(
+              visible: isUser,
+              child: read?  Icon(Icons.done_all_rounded,color: Colors.blue,size: ScreenHeight.sixteen,) :  Icon(Icons.done_all_rounded, color: AppColors.grey797C7B,size:  ScreenHeight.sixteen,))
+          ],
         ),
       ],
     );
   }
 
-  Widget buildDateSeparator(DateTime messageDate) {
+  Widget buildDateSeparator(DateTime messageDate,bool dark) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final tomorrow = today.add(const Duration(days: 1));
@@ -98,7 +117,8 @@ class MessageChatBubble extends StatelessWidget {
 
     if (messageDate.isAfter(today) && messageDate.isBefore(tomorrow)) {
       dateText = "Today";
-    } else if (messageDate.isBefore(today) && messageDate.isAfter(today.subtract(const Duration(days: 1)))) {
+    } else if (messageDate.isBefore(today) &&
+        messageDate.isAfter(today.subtract(const Duration(days: 1)))) {
       dateText = "Yesterday";
     } else if (messageDate.isAfter(tomorrow)) {
       dateText = "Tomorrow";
@@ -112,7 +132,7 @@ class MessageChatBubble extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         margin: const EdgeInsets.symmetric(vertical: 12.0),
         decoration: BoxDecoration(
-          color: Colors.grey[300],
+          color: dark ? AppColors.receiverDark : AppColors.receiverLight,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(

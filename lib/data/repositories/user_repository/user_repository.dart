@@ -32,6 +32,12 @@ Stream<QuerySnapshot<Map<String,dynamic>>> get getAllUser{
     return _db.collection("User").snapshots();
   }
 
+  /// snapshot of specific Users
+  Future<DocumentSnapshot<Map<String,dynamic>>> getSpecificUser({required String fromId}){
+    return _db.collection("User").doc(fromId).get();
+  }
+
+
   /// This function will generate the chat room between 2 users
   String generateChatRoom({required String receiverId}) => UserAuthentication.instance.user!.uid.hashCode <= receiverId.hashCode?
       "${UserAuthentication.instance.user!.uid}_$receiverId":"${receiverId}_${UserAuthentication.instance.user!.uid}";
@@ -43,6 +49,23 @@ Stream<QuerySnapshot<Map<String,dynamic>>> get getAllUser{
         .collection("messages").orderBy("dateAndTime", descending: false)
         .snapshots();  // This listens to changes in the 'messages' collection
   }
+
+
+  /// snapshot of list of all chats
+  Stream<QuerySnapshot<Map<String,dynamic>>> getChatList(){
+    return _db.collection("Chat").snapshots();  // This listens to changes in the 'messages' collection
+  }
+
+  /// save basic info in chat room docs
+  Future<void> updateChatRoomFields({required String receiverId, required String fromId,required String toId,required String lastMessage,required String timeStamp,}) async{
+    await _db.collection("Chat").doc(generateChatRoom(receiverId: receiverId)).set({
+      "fromId":fromId,
+      "toId":toId,
+      "lastMessage":lastMessage,
+      "timeStamp":timeStamp
+    });  // This listens to changes in the 'messages' collection
+  }
+
 
   // Stream to get users
   Stream<List<ContactModel>> get contactsStream {
@@ -74,7 +97,25 @@ Stream<QuerySnapshot<Map<String,dynamic>>> get getAllUser{
   /// save users Chat records
   Future<void> saveChatRecords({required String receiverId, required MessageModel messageModel}) async{
     try{
-      return await _db.collection("Chat").doc(generateChatRoom(receiverId: receiverId)).collection("messages").doc().set(messageModel.toMap());
+       await _db.collection("Chat").doc(generateChatRoom(receiverId: receiverId)).collection("messages").doc().set(messageModel.toMap());
+    }on FirebaseAuthException catch (e){
+      throw FirebaseAuthExceptionHandler(e.code).message;
+    }on FirebaseException catch(e){
+      throw FirebaseExceptionHandler(e.code).message;
+    } on FormatException catch (e){
+      throw FormatExceptionHandler.handleException(e);
+    } on PlatformException catch (e){
+      throw PlatformExceptionHandler(e.code).message;
+    }catch (e) {
+      throw "Something went wrong";
+    }
+  }
+
+  /// save users Chat records
+  Future<void> updateSingleField({required String receiverId,required String docId}) async{
+    try{
+       await _db.collection("Chat").doc(generateChatRoom(receiverId: receiverId)).collection("messages").doc(docId).update(
+          {"read": true});
     }on FirebaseAuthException catch (e){
       throw FirebaseAuthExceptionHandler(e.code).message;
     }on FirebaseException catch(e){

@@ -26,10 +26,17 @@ class SingleChatController extends GetxController{
   }
 
 /// send message
-Future<void> sendMessage(String receiverId, MessageModel messageModel ) async{
-   await UserRepository.instance.saveChatRecords(receiverId: receiverId, messageModel: messageModel).then((_){
-     chatFieldController.clear();
-   });
+Future<void> sendMessage(String receiverId, MessageModel messageModel ) async {
+  await UserRepository.instance.saveChatRecords(
+      receiverId: receiverId, messageModel: messageModel).then((_) {
+    chatFieldController.clear();
+    UserRepository.instance.updateChatRoomFields(
+        receiverId: receiverId,
+        fromId: messageModel.fromId??"",
+        toId: messageModel.toId??"",
+        lastMessage: messageModel.msg??"",
+        timeStamp: messageModel.dateAndTime??"");
+  });
 }
 
 }

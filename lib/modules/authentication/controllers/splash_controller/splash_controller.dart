@@ -17,7 +17,7 @@ class SplashController extends GetxController{
       if( await _checkPermission()){
         final user = UserAuthentication.instance.user;
         if (user != null) {
-          Get.toNamed(Routes.splashLogin);
+          Get.offAllNamed(Routes.bottomNav);
         } else {
           Get.toNamed(Routes.splashLogin);
         }

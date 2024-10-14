@@ -35,4 +35,11 @@ class AppColors{
 
   /// green
   static const Color green0FE16D = Color(0xff0FE16D);
+
+
+  /// chat box
+  static  Color senderLight =  Colors.blue[700]!;
+  static  Color senderDark = Colors.blue[800]!;
+  static  Color receiverDark = Colors.grey[800]!;
+  static  Color receiverLight = Colors.grey[300]!;
 }

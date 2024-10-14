@@ -4,15 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 enum Type{text,image,video,audio}
 
 class MessageModel {
+  String? id;
    String? fromId;
    String? dateAndTime;
    String? toId;
-   String? read;
+   bool? read;
    String? sent;
    String? msg;
    Type? type;
 
   MessageModel({
+    this.id,
      this.fromId,
     this.dateAndTime,
      this.toId,
@@ -25,6 +27,7 @@ class MessageModel {
   // Convert a MessageModel into a Map to store in a database like Firestore
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'fromId': fromId,
       'toId': toId,
       'read': read,
@@ -38,9 +41,10 @@ class MessageModel {
   // Create a MessageModel from a Map (used when fetching data from Firestore or other sources)
   factory MessageModel.fromMap(DocumentSnapshot<Map<String, dynamic>> map) {
     return MessageModel(
+      id: map.id,
       fromId: map['fromId'],
       toId: map['toId'],
-      read: map['read'] ?? false,
+      read:  map['read'],
       sent: map['sent'],
       msg: map['msg'],
       dateAndTime: map['dateAndTime'],
