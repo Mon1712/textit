@@ -17,7 +17,7 @@ class ContactsController extends GetxController {
   /// move to single chat screen
   void moveToSingleChatScreen(ContactModel contactModel){
 
-    Get.toNamed(Routes.singleChat, arguments: contactModel);
+    Get.toNamed(Routes.singleChat, arguments: contactModel.id);
   }
 
   @override

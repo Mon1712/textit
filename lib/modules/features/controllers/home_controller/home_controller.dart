@@ -45,9 +45,9 @@ class HomeController extends GetxController with GetTickerProviderStateMixin{
 
 
 /// move to single chat
-  void moveToSingleChat() {
+  void moveToSingleChat(String receiverId) {
     0.2.delay( () {
-     Get.toNamed(Routes.singleChat);
+     Get.toNamed(Routes.singleChat, arguments:receiverId );
    });
   }
 

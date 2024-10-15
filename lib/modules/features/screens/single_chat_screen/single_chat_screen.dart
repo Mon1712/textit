@@ -32,40 +32,63 @@ class SingleChatScreen extends StatelessWidget {
 
           /// app bar
           appBar: CAppBar(
-            titleWidget: Row(
-              children: [
-                CustomCachedImageStack(
-                  height: ScreenHeight.fortyFour,
-                  width: ScreenHeight.fortyFour,
-                  color: AppColors.blueA1B5D8.withOpacity(0.5),
-                  image: controller.contactModelArg.profileImage,
-                  imageRadius: ScreenHeight.fortyFour,
-                  positionRight: ScreenHeight.two,
-                  positionBottom: ScreenHeight.four,
-                  child: Container(
-                    height: ScreenHeight.eight,
-                    width: ScreenHeight.eight,
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.green0FE16D
-                    ),
-                  ),
-                ),
-                10.width,
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            titleWidget: StreamBuilder(
+              stream: UserRepository.instance.getSpecificUserData(fromId: controller.receiverId),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Text("Loading..."); // Loading state
+                } else if (snapshot.hasError) {
+                  return const Text("Error fetching data"); // Error state
+                } else if (!snapshot.hasData || snapshot.data == null) {
+                  return const Text("No data available"); // No data state
+                }
+                var receiverUserData = snapshot.data!;
+                var profileImage = receiverUserData.get("profileImage");
+                var name = receiverUserData.get("name");
+                var isOnline = receiverUserData.get("isOnline");
+                return Row(
                   children: [
-                    Text(controller.contactModelArg.name, style: TextStyle(
-                        fontSize: ScreenPixels.sixteen,
-                        fontWeight: FontWeight.w500
-                    ),),
-                    Text("Active now", style: TextStyle(
-                        fontSize: ScreenPixels.twelve,
-                        color: AppColors.grey797C7B.withOpacity(0.8)
-                    ),)
+                    CustomCachedImageStack(
+                      height: ScreenHeight.fortyFour,
+                      width: ScreenHeight.fortyFour,
+                      color: AppColors.blueA1B5D8.withOpacity(0.5),
+                      image: profileImage,
+                      imageRadius: ScreenHeight.fortyFour,
+                      positionRight: ScreenHeight.two,
+                      positionBottom: ScreenHeight.four,
+                      child: isOnline ?Container(
+                        height: ScreenHeight.eight,
+                        width: ScreenHeight.eight,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.green0FE16D
+                        ),
+                      ):Container(
+                        height: ScreenHeight.eight,
+                        width: ScreenHeight.eight,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.grey797C7B
+                        ),
+                      ),
+                    ),
+                    10.width,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(name, style: TextStyle(
+                            fontSize: ScreenPixels.sixteen,
+                            fontWeight: FontWeight.w500
+                        ),),
+                        Text("Active now", style: TextStyle(
+                            fontSize: ScreenPixels.twelve,
+                            color: AppColors.grey797C7B.withOpacity(0.8)
+                        ),)
+                      ],
+                    )
                   ],
-                )
-              ],
+                );
+              }
             ),
             centerTitle: false,
             leadingWidth: ScreenHeight.forty,
@@ -90,7 +113,7 @@ class SingleChatScreen extends StatelessWidget {
                   height: Get.height * 0.78,
                   child: StreamBuilder(
                       stream: UserRepository.instance.getAllChats(
-                          receiverId: controller.contactModelArg.id),
+                          receiverId: controller.receiverId),
                       builder: (context, snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.none:
@@ -111,8 +134,6 @@ class SingleChatScreen extends StatelessWidget {
                               // Retrieving the messages from the snapshot
                               var messages = snapshot.data!.docs.map((map) =>
                                   MessageModel.fromMap(map)).toList();
-                              var docId = snapshot.data!.docs.map((map) =>
-                                 map.id).toList();
                               return
                                 messages.isEmpty ? Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -135,6 +156,7 @@ class SingleChatScreen extends StatelessWidget {
                                 ) :
 
                                 CListViewBuilder(
+                                  controller: controller.scrollController,
                                   physics: const AlwaysScrollableScrollPhysics(),
                                   padding: EdgeInsets.symmetric(
                                       horizontal: ScreenHeight
@@ -169,7 +191,7 @@ class SingleChatScreen extends StatelessWidget {
                                         messageDate: messageTime,
                                         read: messageData.read??false,
                                         showDateSeparator: showDateSeparator,
-                                      receiverId: controller.contactModelArg.id,
+                                      receiverId: controller.receiverId,
                                       docId: messageData.id??"",
                                     );
                                   },
@@ -207,10 +229,10 @@ class SingleChatScreen extends StatelessWidget {
                   onTapSend: () {
                     if(controller.chatFieldController.text.isNotEmpty){
                       controller.sendMessage(
-                          controller.contactModelArg.id,
+                          controller.receiverId,
                           MessageModel(
                               fromId: UserAuthentication.instance.user!.uid,
-                              toId: controller.contactModelArg.id,
+                              toId: controller.receiverId,
                               read: false,
                               msg: controller.chatFieldController.text,
                               sent: DateFormat('hh:mm a')

@@ -247,7 +247,7 @@ class RecentChatList extends StatelessWidget {
       if (controller.selectedList.isNotEmpty) {
         controller.selectedList.add(index);
       } else {
-        // Navigate to chat detail page
+        controller.moveToSingleChat(fromId);
       }
     }
   }

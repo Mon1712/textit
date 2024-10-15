@@ -6,7 +6,6 @@ import 'package:chateo/utils/constants/dimens/screen_height/screen_height.dart';
 import 'package:chateo/utils/constants/dimens/screen_pixels/screen_pixels.dart';
 import 'package:chateo/utils/extension/sized_box_extensions/sized_box_extensions.dart';
 import 'package:chateo/utils/helper_functions/helper_functions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -34,7 +33,6 @@ class MessageChatBubble extends StatelessWidget {
     var dark = HelperFunctions.isDarkerMode(context);
     bool isUser = UserAuthentication.instance.user!.uid == fromUserId;
     if(!read) {
-      print(read);
       if(!isUser){
         UserRepository.instance.updateSingleField(receiverId: receiverId??"",docId:docId);
       }
@@ -75,7 +73,7 @@ class MessageChatBubble extends StatelessWidget {
                   style: TextStyle(
                     fontSize: ScreenPixels.fourteen,
                     fontWeight: FontWeight.w500,
-                    color: isUser ? AppColors.white : AppColors.black151515,
+                    color: isUser ? AppColors.white : AppColors.black000E08,
                   ),
                 ),
               ),

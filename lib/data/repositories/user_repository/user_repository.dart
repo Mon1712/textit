@@ -32,10 +32,16 @@ Stream<QuerySnapshot<Map<String,dynamic>>> get getAllUser{
     return _db.collection("User").snapshots();
   }
 
-  /// snapshot of specific Users
+  /// snapshot of specific Users using Future Builder
   Future<DocumentSnapshot<Map<String,dynamic>>> getSpecificUser({required String fromId}){
     return _db.collection("User").doc(fromId).get();
   }
+
+  /// snapshot of specific Users using Stream Builder
+  Stream<DocumentSnapshot<Map<String,dynamic>>> getSpecificUserData({required String fromId}){
+    return _db.collection("User").doc(fromId).snapshots();
+  }
+
 
 
   /// This function will generate the chat room between 2 users

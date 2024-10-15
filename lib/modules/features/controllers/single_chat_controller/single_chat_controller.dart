@@ -1,5 +1,4 @@
 
-import 'package:chateo/data/models/contact_model/contact_model.dart';
 import 'package:chateo/data/models/message_model/message_model.dart';
 import 'package:chateo/data/repositories/user_repository/user_repository.dart';
 import 'package:flutter/material.dart';
@@ -10,19 +9,37 @@ class SingleChatController extends GetxController{
 
   /// variables
   final chatFieldController = TextEditingController();
+  ScrollController scrollController = ScrollController();
   // ignore: prefer_typing_uninitialized_variables
-  var contactModelArg;
+  var receiverId;
   RxList<MessageModel> messageModel = <MessageModel>[].obs;
-
   @override
   void onInit() {
     super.onInit();
     getArgsData();
+    // Wait for the first frame to ensure the layout is complete
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToBottom();
+    });
   }
 
+  // Scroll to the bottom function
+  void _scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (scrollController.hasClients) {
+        scrollController.jumpTo(
+          scrollController.position.maxScrollExtent,
+        );
+      }
+    });
+  }
   /// get argument data
   void getArgsData(){
-    contactModelArg = Get.arguments as ContactModel;
+    receiverId = Get.arguments;
+  }
+
+  void scrollDown() {
+    scrollController.jumpTo(scrollController.position.maxScrollExtent);
   }
 
 /// send message
