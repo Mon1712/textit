@@ -43,7 +43,6 @@ class RecentChatList extends StatelessWidget {
             // The stream is actively providing data.
               if (snapshot.hasData) {
                 var chatDocs = snapshot.data!.docs;
-                // print(chatDocs.every((test)=>test["read"]==false));
                 return CListViewBuilder(
                     physics: const AlwaysScrollableScrollPhysics(),
                     padding: EdgeInsets.symmetric(
@@ -54,10 +53,12 @@ class RecentChatList extends StatelessWidget {
                       var chatData = chatDocs[index];
                       var fromId = chatData['fromId'];
                       var toId = chatData['toId'];
+                      var unRead = chatData['unRead'];
                       var currentUser = UserAuthentication.instance.user;
                       var otherUserId = currentUser!.uid == fromId
                           ? toId
                           : fromId;
+                      var isReceiver = currentUser.uid == toId;
                       return InkWell(
                           onTap: () => _onChatTap(controller, index, otherUserId),
                           onLongPress: () =>
@@ -82,7 +83,7 @@ class RecentChatList extends StatelessWidget {
                                   () =>
                                   _buildContainer(
                                       controller, index, dark, otherUserData,
-                                      chatData),
+                                      chatData,unRead,isReceiver),
                             );
                           })
                       );
@@ -116,7 +117,7 @@ class RecentChatList extends StatelessWidget {
   /// User Info Container
   Container _buildContainer(HomeController controller, int index, bool dark,
       DocumentSnapshot<Map<String, dynamic>> otherUserData,
-      QueryDocumentSnapshot<Map<String, dynamic>> chatData) {
+      QueryDocumentSnapshot<Map<String, dynamic>> chatData,String unRead, bool isReceiver) {
     return Container(
       color: controller.selectedList.contains(
           index)
@@ -182,7 +183,7 @@ class RecentChatList extends StatelessWidget {
           controller.selectedList.contains(index)
               ?
           _buildNotificationAndDelete()
-              : _buildChatTimeAndCount(dark)
+              : _buildChatTimeAndCount(dark,unRead,isReceiver)
         ],
       ),
     );
@@ -210,7 +211,7 @@ class RecentChatList extends StatelessWidget {
   }
 
   /// handle Time and message count
-  Column _buildChatTimeAndCount(bool dark) {
+  Column _buildChatTimeAndCount(bool dark,String unRead, bool isReceiver) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment
           .end,
@@ -223,14 +224,15 @@ class RecentChatList extends StatelessWidget {
               .grey797C7B.withOpacity(0.5),
         ),),
         5.height,
-        Container(
+        if (isReceiver && unRead.isNotEmpty)
+          Container(
           padding: EdgeInsets.all(
               ScreenHeight.six),
           decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: AppColors.redF04A4C
           ),
-          child: Text("3", style: TextStyle(
+          child: Text(unRead, style: TextStyle(
             fontSize: ScreenPixels.twelve,
             color: AppColors.white,
             fontWeight: FontWeight.w900,

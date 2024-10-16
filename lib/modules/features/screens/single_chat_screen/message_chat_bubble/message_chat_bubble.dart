@@ -35,6 +35,7 @@ class MessageChatBubble extends StatelessWidget {
     if(!read) {
       if(!isUser){
         UserRepository.instance.updateSingleField(receiverId: receiverId??"",docId:docId);
+        UserRepository.instance.updateChatRoomSingleFields(receiverId: receiverId??"");
       }
     }
     return Column(

@@ -13,7 +13,7 @@ class SingleChatController extends GetxController{
   // ignore: prefer_typing_uninitialized_variables
   var receiverId;
   RxList<MessageModel> messageModel = <MessageModel>[].obs;
-  String unRead = "";
+  int unRead = 0;
   @override
   void onInit() {
     super.onInit();

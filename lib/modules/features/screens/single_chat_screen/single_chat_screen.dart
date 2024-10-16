@@ -135,7 +135,7 @@ class SingleChatScreen extends StatelessWidget {
                               var messages = snapshot.data!.docs.map((map) =>
                                   MessageModel.fromMap(map)).toList();
 
-                             controller.unRead = snapshot.data!.docs.where((map) =>map['read']==false).toList().length.toString();
+                             controller.unRead = snapshot.data!.docs.where((map) =>map['read']==false).toList().length;
                               
                               return
                                 messages.isEmpty ? Column(
@@ -168,6 +168,7 @@ class SingleChatScreen extends StatelessWidget {
                                   itemCount: messages.length,
                                   itemBuilder: (_, index) {
                                     var messageData = messages[index];
+
                                     final messageTime = DateTime.parse(
                                         messageData.dateAndTime ??
                                             ""); // Assuming `sent` is a string
@@ -233,7 +234,7 @@ class SingleChatScreen extends StatelessWidget {
                     if(controller.chatFieldController.text.isNotEmpty){
                       controller.sendMessage(
                           controller.receiverId,
-                          controller.unRead.toString(),
+                         ( controller.unRead + 1).toString(),
                           MessageModel(
                               fromId: UserAuthentication.instance.user!.uid,
                               toId: controller.receiverId,

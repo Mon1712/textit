@@ -73,6 +73,13 @@ Stream<QuerySnapshot<Map<String,dynamic>>> get getAllUser{
     });  // This listens to changes in the 'messages' collection
   }
 
+  /// save single field basic info in chat room docs
+  Future<void> updateChatRoomSingleFields({required String receiverId,}) async{
+    await _db.collection("Chat").doc(generateChatRoom(receiverId: receiverId)).update({
+      "unRead":""
+    });  // This listens to changes in the 'messages' collection
+  }
+
 
   // Stream to get users
   Stream<List<ContactModel>> get contactsStream {
