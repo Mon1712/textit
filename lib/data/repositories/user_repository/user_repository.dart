@@ -63,12 +63,13 @@ Stream<QuerySnapshot<Map<String,dynamic>>> get getAllUser{
   }
 
   /// save basic info in chat room docs
-  Future<void> updateChatRoomFields({required String receiverId, required String fromId,required String toId,required String lastMessage,required String timeStamp,}) async{
+  Future<void> updateChatRoomFields({required String receiverId, required String fromId,required String toId,required String lastMessage,required String timeStamp,required String unRead}) async{
     await _db.collection("Chat").doc(generateChatRoom(receiverId: receiverId)).set({
       "fromId":fromId,
       "toId":toId,
       "lastMessage":lastMessage,
-      "timeStamp":timeStamp
+      "timeStamp":timeStamp,
+      "unRead":unRead
     });  // This listens to changes in the 'messages' collection
   }
 

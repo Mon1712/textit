@@ -7,6 +7,7 @@ class AppColors{
 
   /// white
   static const Color white = Colors.white;
+  static const Color floralWhite = Color(0xffFFFAF0);
 
   /// blue
   static const Color blue3D4A7A = Color(0xff3D4A7A);

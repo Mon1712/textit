@@ -73,7 +73,7 @@ class MessageChatBubble extends StatelessWidget {
                   style: TextStyle(
                     fontSize: ScreenPixels.fourteen,
                     fontWeight: FontWeight.w500,
-                    color: isUser ? AppColors.white : AppColors.black000E08,
+                    color: isUser ? AppColors.floralWhite : dark? AppColors.floralWhite: AppColors.black151515
                   ),
                 ),
               ),
@@ -130,7 +130,7 @@ class MessageChatBubble extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         margin: const EdgeInsets.symmetric(vertical: 12.0),
         decoration: BoxDecoration(
-          color: dark ? AppColors.receiverDark : AppColors.receiverLight,
+          color: dark ? AppColors.greyCDD1D0.withOpacity(0.7) : AppColors.receiverLight,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(

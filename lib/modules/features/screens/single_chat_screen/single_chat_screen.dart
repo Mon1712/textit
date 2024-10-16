@@ -134,6 +134,9 @@ class SingleChatScreen extends StatelessWidget {
                               // Retrieving the messages from the snapshot
                               var messages = snapshot.data!.docs.map((map) =>
                                   MessageModel.fromMap(map)).toList();
+
+                             controller.unRead = snapshot.data!.docs.where((map) =>map['read']==false).toList().length.toString();
+                              
                               return
                                 messages.isEmpty ? Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -230,6 +233,7 @@ class SingleChatScreen extends StatelessWidget {
                     if(controller.chatFieldController.text.isNotEmpty){
                       controller.sendMessage(
                           controller.receiverId,
+                          controller.unRead.toString(),
                           MessageModel(
                               fromId: UserAuthentication.instance.user!.uid,
                               toId: controller.receiverId,

@@ -43,6 +43,7 @@ class RecentChatList extends StatelessWidget {
             // The stream is actively providing data.
               if (snapshot.hasData) {
                 var chatDocs = snapshot.data!.docs;
+                // print(chatDocs.every((test)=>test["read"]==false));
                 return CListViewBuilder(
                     physics: const AlwaysScrollableScrollPhysics(),
                     padding: EdgeInsets.symmetric(

@@ -13,6 +13,7 @@ class SingleChatController extends GetxController{
   // ignore: prefer_typing_uninitialized_variables
   var receiverId;
   RxList<MessageModel> messageModel = <MessageModel>[].obs;
+  String unRead = "";
   @override
   void onInit() {
     super.onInit();
@@ -38,17 +39,14 @@ class SingleChatController extends GetxController{
     receiverId = Get.arguments;
   }
 
-  void scrollDown() {
-    scrollController.jumpTo(scrollController.position.maxScrollExtent);
-  }
-
 /// send message
-Future<void> sendMessage(String receiverId, MessageModel messageModel ) async {
+Future<void> sendMessage(String receiverId, String unRead,MessageModel messageModel ) async {
   await UserRepository.instance.saveChatRecords(
       receiverId: receiverId, messageModel: messageModel).then((_) {
     chatFieldController.clear();
     UserRepository.instance.updateChatRoomFields(
         receiverId: receiverId,
+        unRead: unRead,
         fromId: messageModel.fromId??"",
         toId: messageModel.toId??"",
         lastMessage: messageModel.msg??"",
