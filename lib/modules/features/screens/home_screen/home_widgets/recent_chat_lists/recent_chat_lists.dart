@@ -13,6 +13,7 @@ import 'package:chateo/utils/helper_functions/helper_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class RecentChatList extends StatelessWidget {
   const RecentChatList({
@@ -54,13 +55,15 @@ class RecentChatList extends StatelessWidget {
                       var fromId = chatData['fromId'];
                       var toId = chatData['toId'];
                       var unRead = chatData['unRead'];
+                      var timeStamp = chatData["timeStamp"];
                       var currentUser = UserAuthentication.instance.user;
                       var otherUserId = currentUser!.uid == fromId
                           ? toId
                           : fromId;
                       var isReceiver = currentUser.uid == toId;
                       return InkWell(
-                          onTap: () => _onChatTap(controller, index, otherUserId),
+                          onTap: () =>
+                              _onChatTap(controller, index, otherUserId),
                           onLongPress: () =>
                               _onChatLongPress(controller, index),
                           child: FutureBuilder(
@@ -82,8 +85,15 @@ class RecentChatList extends StatelessWidget {
                             return Obx(
                                   () =>
                                   _buildContainer(
-                                      controller, index, dark, otherUserData,
-                                      chatData,unRead,isReceiver),
+                                      controller: controller,
+                                      index: index,
+                                      dark: dark,
+                                      otherUserData: otherUserData,
+                                      chatData: chatData,
+                                      unRead: unRead,
+                                      isReceiver: isReceiver,
+                                      timeStamp: timeStamp
+                                  ),
                             );
                           })
                       );
@@ -115,9 +125,15 @@ class RecentChatList extends StatelessWidget {
   }
 
   /// User Info Container
-  Container _buildContainer(HomeController controller, int index, bool dark,
-      DocumentSnapshot<Map<String, dynamic>> otherUserData,
-      QueryDocumentSnapshot<Map<String, dynamic>> chatData,String unRead, bool isReceiver) {
+  Container _buildContainer({required HomeController controller,
+    required int index,
+    required bool dark,
+    required DocumentSnapshot<Map<String, dynamic>> otherUserData,
+    required QueryDocumentSnapshot<Map<String, dynamic>> chatData,
+    required String unRead,
+    required bool isReceiver,
+    required String timeStamp,
+  }) {
     return Container(
       color: controller.selectedList.contains(
           index)
@@ -160,11 +176,15 @@ class RecentChatList extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment
                 .start,
             children: [
-              Text(otherUserData.get("name"),
-                style: TextStyle(
-                  fontSize: ScreenPixels.twenty,
-                  fontWeight: FontWeight.w500,
-                ),),
+              SizedBox(
+                width: Get.width*0.5,
+                child: Text(otherUserData.get("name"),
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: ScreenPixels.twenty,
+                    fontWeight: FontWeight.w500,
+                  ),),
+              ),
               Text(chatData['lastMessage'],
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -183,7 +203,7 @@ class RecentChatList extends StatelessWidget {
           controller.selectedList.contains(index)
               ?
           _buildNotificationAndDelete()
-              : _buildChatTimeAndCount(dark,unRead,isReceiver)
+              : _buildChatTimeAndCount(dark, unRead, isReceiver, timeStamp)
         ],
       ),
     );
@@ -211,12 +231,13 @@ class RecentChatList extends StatelessWidget {
   }
 
   /// handle Time and message count
-  Column _buildChatTimeAndCount(bool dark,String unRead, bool isReceiver) {
+  Column _buildChatTimeAndCount(bool dark, String unRead, bool isReceiver,
+      String timeStamp) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment
           .end,
       children: [
-        Text("2 min ago", style: TextStyle(
+        Text(formatTimeStamp(timeStamp), style: TextStyle(
           fontSize: ScreenPixels.twelve,
           color: dark
               ? AppColors.grey797C7B
@@ -226,20 +247,56 @@ class RecentChatList extends StatelessWidget {
         5.height,
         if (isReceiver && unRead.isNotEmpty)
           Container(
-          padding: EdgeInsets.all(
-              ScreenHeight.six),
-          decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.redF04A4C
+            padding: EdgeInsets.all(
+                ScreenHeight.six),
+            decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.redF04A4C
+            ),
+            child: Text(unRead, style: TextStyle(
+              fontSize: ScreenPixels.twelve,
+              color: AppColors.white,
+              fontWeight: FontWeight.w900,
+            ),),
           ),
-          child: Text(unRead, style: TextStyle(
-            fontSize: ScreenPixels.twelve,
-            color: AppColors.white,
-            fontWeight: FontWeight.w900,
-          ),),
-        ),
       ],
     );
+  }
+
+  /// Time stamps
+  String formatTimeStamp(String timeStamp) {
+    // convert timestamp date in DateTime
+    var date = DateTime.parse(timeStamp);
+
+    // convert date in "MM/dd/yy" format
+    String getDate = DateFormat("MM/dd/yy").format(date);
+
+    // Get today's date without the time component
+    var today = DateTime.now();
+    // Get yesterday date
+    var yesterday = today.subtract(const Duration(days: 1));
+
+    // difference between current date and message date
+    final difference = today.difference(date);
+
+    // Compare the full date (day, month, and year)
+    if (date.year == today.year && date.month == today.month &&
+        date.day == today.day) {
+      if (difference.inSeconds < 60) {
+        return "${difference.inSeconds} sec ago";
+      } else if (difference.inMinutes >= 1 && difference.inMinutes < 60) {
+        return "${difference.inMinutes} min ago";
+      } else if (difference.inMinutes >= 60 && difference.inHours <= 10) {
+        return "${difference.inHours} hr ago";
+      } else {
+        return "today";
+      }
+    } else if (date.year == yesterday.year && date.month == yesterday.month &&
+        date.day == yesterday.day) {
+      return "yesterday";
+    } else {
+      return getDate; // Otherwise, return the formatted time
+    }
   }
 
   /// hand on Tap
